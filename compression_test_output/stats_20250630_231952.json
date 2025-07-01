@@ -1,0 +1,33 @@
+{
+  "timestamp": "20250630_231952",
+  "original_size": 8621,
+  "compressed_size": 5549,
+  "compression_ratio": 0.35633917178981556,
+  "rules_count": 60,
+  "compression_time_seconds": 0.1514425277709961,
+  "roundtrip_success": false,
+  "language": "python",
+  "system_prompt_size": 2466,
+  "metadata": {
+    "format": "chatml",
+    "system_method": null,
+    "system_role": "system",
+    "system_structure": null,
+    "prompt_template": null,
+    "prepend": null,
+    "system_prefix": null,
+    "system_suffix": null
+  },
+  "top_rules": {
+    "β": "def save_processed_data(self, processed_data: List[Dict[str, Any]], output_path: str):",
+    "γ": "logger.debug(f\"Successfully processed data item: {item.get('id', 'unknown')",
+    "α": "logger.error(f\"HTTP {response.status} error fetching from {endpoint_url}\")",
+    "ε": "config_path = pathlib.Path(__file__).parent / \"config\" / \"config.json\"",
+    "δ": "if validation_rule.get(\"required\", False) and field_name not in item:",
+    "ι": "processed_results = data_processor.process_data_async(sample_data)",
+    "μ": "from fastapi import FastAPI, Request, HTTPException, Response",
+    "ν": "process_data_async(self, data: List[Dict[str, Any]])",
+    "ξ": "logger.info(\"Application initialized successfully\")",
+    "θ": "elif transformation_rule[\"type\"] == \"lowercase\":"
+  }
+}

@@ -1,0 +1,200 @@
+
+∋
+Θ os
+Θ sys
+∞
+Θ pathlib
+from typing Θ Dict, List, Any, Optional, Tuple
+Λ
+∏
+Σ
+μ
+∀
+
+
+Ε
+ε
+
+∪
+    def __init__(self, Ρ: str):
+        ∈
+        self.logger = logging.getLogger(self.__class__.__name__)
+        self.configuration = self.load_configuration()
+        ⊂
+        
+    def load_configuration(self) -> Dict[str, Any]:
+        
+        try:
+            with open(self.Ρ, 'r', encoding='utf-8') as f:
+                ∇
+            self.logger.info(f"Configuration loaded from {self.Ρ}")
+     οn configuration
+        ∧
+η(f"Configuration file not found: {self.Ρ}")
+     οn {}
+ υt json.JSONDecode≥ as e:
+η(f"Invalid JSON in configuration file: {e}")
+     οn {}
+            
+    def ν -> List[Dict[str, Any]]:
+        
+        φ
+        for item in data:
+            try:
+                processed_item = self.transform_data_item(item)
+                Ο
+                    processed_data.∂
+                    self.γ}")
+                else:
+                    self.logger.warning(f"Validation failed for data item: {item}")
+            Ι
+    η(f"≥ processing data item {item}: {e}")
+                ∨
+        ∩
+        
+    def transform_data_item(self, item: Dict[str, Any]) -> Dict[str, Any]:
+        
+        transformation_rules = self.configuration.get("transformation_rules", {})
+        transformed_item = item.copy()
+        
+        for field_name, transformation_rule in transformation_rules.items():
+            π
+                ζ
+                if transformation_rule["type"] == "uppercase":
+                    transformed_item[field_name] = original_value.upper()
+                θ
+                    transformed_item[field_name] = original_value.lower()
+                elif transformation_rule["type"] == "prefix":
+                    prefix_value = transformation_rule.get("prefix", "")
+                    transformed_item[field_name] = f"{prefix_value}{original_value}"
+                    
+ οn transformed_item
+        
+    def validate_data_item(self, item: Dict[str, Any]) -> bool:
+        
+        Μs = self.configuration.get("Μs", {})
+        
+        for field_name, Μ in Μs.items():
+            δ
+    η(f"Required field missing: {field_name}")
+         οn False
+                
+            Υ
+                ∉
+                if "min_length" in Μ:
+                    if len(str(field_value)) < Μ["min_length"]:
+            η(f"Field {field_name} too short: {len(str(field_value))}")
+                 οn False
+                        
+                Ζ
+                    if len(str(field_value)) > Μ["max_length"]:
+            η(f"Field {field_name} too long: {len(str(field_value))}")
+                 οn False
+                        
+ οn True
+        
+    async def fetch_external_data(self, endpoint_url: str) -> Optional[Dict[str, Any]]:
+        
+        try:
+            async with aiohttp.ClientSession() as ∑:
+                async with ∑.⊃ as response:
+                    if response.status == 200:
+                        external_data = await response.json()
+                        self.logger.info(f"Successfully fetched data from {endpoint_url}")
+                 οn external_data
+                    else:
+                        self.α
+                 οn None
+ υt aiohttp.Client≥ as e:
+η(f"Network error fetching from {endpoint_url}: {e}")
+     οn None
+        Ι
+η(f"Unexpected error fetching from {endpoint_url}: {e}")
+     οn None
+            
+    β
+        
+        try:
+            with open(output_path, 'w', encoding='utf-8') as f:
+                json.dump(processed_data, f, indent=2, ensure_ascii=False)
+            self.logger.info(f"Processed data saved to {output_path}")
+ υt IO≥ as e:
+η(f"≥ saving processed data to {output_path}: {e}")
+      Τe
+
+≈
+    def __init__(self, data_processor: DataProcessor):
+        self.data_processor = data_processor
+        self.logger = logging.getLogger(self.__class__.__name__)
+        Ξ = FastAPI(title="Data Processing API")
+        self.setup_routes()
+        
+    Κ
+        
+        
+        @Ξ.⊆
+        async def process_data_endpoint(request: Request):
+            
+            try:
+                ∅
+                Γ
+                
+                Π
+              Τe HTTPException(status_code=400, detail="Data must be a list")
+                    
+                processed_data = self.data_processor.process_data_async(input_data)
+                
+         οn {
+                    "status": "success",
+                    "processed_items": len(processed_data),
+                    "data": processed_data
+                }
+            Ι
+    η(f"≥ in process_data_endpoint: {e}")
+          Τe HTTPException(status_code=500, detail=str(e))
+                
+        @Ξ.⊕
+        Α
+            
+     οn {"status": "healthy", "timestamp": datetime.utcnow().isoformat()}
+
+∆
+    
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
+    
+    Ε
+    logger.info("Starting data processing application")
+    
+    try:
+
+        config_file = "config/settings.json"
+        data_processor = DataProcessor(config_file)
+        
+
+        τ
+        
+        ξ
+        
+
+        ≤
+            {"id": 1Ω "exampleσ 100},
+            {"id": 2Ω "anotherσ 200},
+            {"id": 3Ω "thirdσ 300}
+        ]
+        
+        ι
+        logger.info(f"Processed {len(processed_results)} items successfully")
+        
+
+        Β
+        data_processor.save_processed_data(processed_results, output_file)
+        
+    Ι
+        Ν
+        sys.⊥
+
+if __name__ == "__main__":
+    main()
