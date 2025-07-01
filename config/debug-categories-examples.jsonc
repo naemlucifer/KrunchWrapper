@@ -1,0 +1,181 @@
+{
+    // Debug Category Configuration Examples for KrunchWrapper
+    // ========================================================
+    // Copy the "debug_categories" section you want into your server.jsonc file
+    // under the "logging" section to enable specific debug filtering.
+    
+    // 🎯 SCENARIO 1: Only Cline Integration Debugging
+    // Useful when debugging Cline-specific issues
+    "cline_only": {
+        "request_processing": false,
+        "cline_integration": true,        // ✅ Show only Cline-related debug messages
+        "session_management": false,
+        "compression_core": false,
+        "compression_proxy": false,
+        "conversation_detection": false,
+        "kv_cache_optimization": false,
+        "conversation_compression": false,
+        "symbol_management": false,
+        "streaming_responses": false,
+        "response_decompression": false,
+        "token_calculations": false,
+        "system_fixes": false,
+        "request_filtering": false,
+        "cleanup_operations": false,
+        "error_handling": true,          // ✅ Always keep errors visible
+        "server_communication": false,
+        "model_context": false,
+        "payload_debugging": false,
+        "test_utilities": false
+    },
+    
+    // 🗜️ SCENARIO 2: Compression System Debugging
+    // Useful when debugging compression algorithms and performance
+    "compression_focus": {
+        "request_processing": false,
+        "cline_integration": false,
+        "session_management": false,
+        "compression_core": true,         // ✅ Core compression logic
+        "compression_proxy": true,        // ✅ Proxy-level compression decisions
+        "conversation_detection": true,   // ✅ Conversation analysis
+        "kv_cache_optimization": true,    // ✅ KV cache optimization
+        "conversation_compression": true, // ✅ Conversation-aware compression
+        "symbol_management": true,        // ✅ Symbol assignment and management
+        "streaming_responses": false,
+        "response_decompression": false,
+        "token_calculations": true,       // ✅ Token calculation metrics
+        "system_fixes": false,
+        "request_filtering": false,
+        "cleanup_operations": false,
+        "error_handling": true,           // ✅ Always keep errors visible
+        "server_communication": false,
+        "model_context": false,
+        "payload_debugging": false,
+        "test_utilities": false
+    },
+    
+    // 🌊 SCENARIO 3: Streaming and Response Processing
+    // Useful when debugging streaming responses and decompression
+    "streaming_focus": {
+        "request_processing": false,
+        "cline_integration": false,
+        "session_management": false,
+        "compression_core": false,
+        "compression_proxy": false,
+        "conversation_detection": false,
+        "kv_cache_optimization": false,
+        "conversation_compression": false,
+        "symbol_management": false,
+        "streaming_responses": true,      // ✅ Streaming response processing
+        "response_decompression": true,   // ✅ Response decompression
+        "token_calculations": false,
+        "system_fixes": false,
+        "request_filtering": false,
+        "cleanup_operations": true,       // ✅ Cleanup operations
+        "error_handling": true,           // ✅ Always keep errors visible
+        "server_communication": false,
+        "model_context": false,
+        "payload_debugging": false,
+        "test_utilities": false
+    },
+    
+    // 🔍 SCENARIO 4: Request Processing and Client Detection
+    // Useful when debugging request handling and client detection
+    "request_focus": {
+        "request_processing": true,       // ✅ Raw request analysis
+        "cline_integration": true,        // ✅ Client detection
+        "session_management": true,       // ✅ Session handling
+        "compression_core": false,
+        "compression_proxy": false,
+        "conversation_detection": false,
+        "kv_cache_optimization": false,
+        "conversation_compression": false,
+        "symbol_management": false,
+        "streaming_responses": false,
+        "response_decompression": false,
+        "token_calculations": false,
+        "system_fixes": true,             // ✅ System fixes and adaptations
+        "request_filtering": true,        // ✅ Request parameter filtering
+        "cleanup_operations": false,
+        "error_handling": true,           // ✅ Always keep errors visible
+        "server_communication": true,    // ✅ Server communication
+        "model_context": true,            // ✅ Model context management
+        "payload_debugging": false,
+        "test_utilities": false
+    },
+    
+    // 🚨 SCENARIO 5: Minimal (Errors Only)
+    // Shows only error messages and critical information
+    "errors_only": {
+        "request_processing": false,
+        "cline_integration": false,
+        "session_management": false,
+        "compression_core": false,
+        "compression_proxy": false,
+        "conversation_detection": false,
+        "kv_cache_optimization": false,
+        "conversation_compression": false,
+        "symbol_management": false,
+        "streaming_responses": false,
+        "response_decompression": false,
+        "token_calculations": false,
+        "system_fixes": false,
+        "request_filtering": false,
+        "cleanup_operations": false,
+        "error_handling": true,           // ✅ Only errors and critical issues
+        "server_communication": false,
+        "model_context": false,
+        "payload_debugging": false,
+        "test_utilities": false
+    },
+    
+    // 🔬 SCENARIO 6: Development and Testing
+    // For development work with detailed payload inspection
+    "development_verbose": {
+        "request_processing": true,
+        "cline_integration": true,
+        "session_management": true,
+        "compression_core": true,
+        "compression_proxy": true,
+        "conversation_detection": true,
+        "kv_cache_optimization": true,
+        "conversation_compression": true,
+        "symbol_management": true,
+        "streaming_responses": true,
+        "response_decompression": true,
+        "token_calculations": true,
+        "system_fixes": true,
+        "request_filtering": true,
+        "cleanup_operations": true,
+        "error_handling": true,
+        "server_communication": true,
+        "model_context": true,
+        "payload_debugging": true,        // ✅ Very detailed payload inspection
+        "test_utilities": true            // ✅ Test-specific debug output
+    },
+    
+    // 📊 SCENARIO 7: Performance Analysis
+    // Focus on performance metrics and token calculations
+    "performance_focus": {
+        "request_processing": false,
+        "cline_integration": false,
+        "session_management": false,
+        "compression_core": false,
+        "compression_proxy": true,        // ✅ Compression decisions and metrics
+        "conversation_detection": false,
+        "kv_cache_optimization": true,    // ✅ KV cache performance
+        "conversation_compression": false,
+        "symbol_management": false,
+        "streaming_responses": false,
+        "response_decompression": false,
+        "token_calculations": true,       // ✅ Token calculation and compression ratios
+        "system_fixes": false,
+        "request_filtering": false,
+        "cleanup_operations": false,
+        "error_handling": true,           // ✅ Always keep errors visible
+        "server_communication": false,
+        "model_context": false,
+        "payload_debugging": false,
+        "test_utilities": false
+    }
+} 

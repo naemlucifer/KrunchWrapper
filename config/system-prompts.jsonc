@@ -1,0 +1,94 @@
+{
+  // Dictionary format configuration for compression instructions
+  "dictionary_format": {
+    /* Format style for dictionary encoding in system prompts
+       Options:
+       - "verbose": Traditional readable format with full English prose
+       - "minimal": Compact micro-grammar format with sentinels (#DICT...#DICT_END)
+       
+       Minimal format example:
+       #DICT α:import numpy as np;β:def __init__(self,;γ:variable;#DICT_END
+       
+       Verbose format example:
+       Apply these symbol substitutions: α=import numpy as np, β=def __init__(self,, γ=variable. */
+    "style": "minimal",
+    
+    /* Alternative delimiters for minimal format if standard ones conflict
+       Used when the content contains ; or : characters that would break parsing */
+   // "alternative_delimiters": {
+   //   "pair_separator": "‖",  // Alternative to semicolon (;)
+   //   "key_value_separator": "⟦"  // Alternative to colon (:)
+   // },
+    
+    /* Whether to include debug information in verbose mode
+       When true and verbose=true in logs, shows both formats for comparison */
+    "enable_debug_view": true,
+    
+    /* Minimum number of dictionary entries to use minimal format
+       Below this threshold, uses verbose format regardless of style setting
+       Set to 0 to always use the configured style */
+    "minimal_format_threshold": 3,
+    
+    /* Header instruction for minimal format (kept short for token efficiency)
+       This replaces the verbose "Apply these symbol substitutions..." text */
+    "minimal_header": "You are given a symbol dictionary. Use the compressed symbols in your responses to save tokens. Expand symbols only when explaining their meaning.",
+    
+    /* Header instruction for verbose format
+       This allows customization of the verbose format instructions */
+    "verbose_header": "You will read {lang} code in a compressed DSL format. Symbol substitutions used: {pairs}. When responding, use the same compressed symbols to save tokens. Only expand symbols when you need to explain their full meaning."
+  },
+
+  // Anthropic Claude (Messages API - current format)
+  "claude": {
+    "format": "messages",
+    "system_method": "system_parameter",
+    "notes": "System prompt is passed as a separate 'system' parameter at API level, not within messages array. Uses structured messages format."
+  },
+  // Google Gemini (Generative AI API)
+  "gemini": {
+    "format": "contents",
+    "system_method": "system_instruction",
+    "system_structure": {
+      "parts": [{"text": "{system_prompt}"}]
+    },
+    "notes": "System prompt uses 'system_instruction' field with parts array structure, not simple ChatML."
+  },
+  // OpenAI ChatGPT (gpt-3.5-turbo, gpt-4, gpt-4o)
+  "chatgpt": {
+    "format": "chatml",
+    "system_role": "system",
+    "notes": "System prompt is included as a message with role 'system' at the top of the messages array."
+  },
+  // ChatML format (explicit entry for the standard)
+  "chatml": {
+    "format": "chatml",
+    "system_role": "system",
+    "notes": "Standard ChatML format used by OpenAI and many other providers. System prompt is included as a message with role 'system' at the top of the messages array."
+  },
+  // Qwen/Qwen2/Qwen3 (Alibaba Cloud API)
+  "qwen": {
+    "format": "chatml",
+    "system_role": "system",
+    "notes": "Uses OpenAI-compatible ChatML format via API. Special tokens are for model training/inference, not API calls."
+  },
+  // DeepSeek (API format)
+  "deepseek": {
+    "format": "chatml",
+    "system_role": "system", 
+    "notes": "Uses OpenAI-compatible ChatML format via API. Special tokens are for model-level processing, not API structure."
+  },
+  // Gemma (Chat template format)
+  "gemma": {
+    "format": "template",
+    "prompt_template": "<start_of_turn>system\n{system_prompt}<end_of_turn>\n<start_of_turn>user\n{user_prompt}<end_of_turn>\n<start_of_turn>model\n",
+    "notes": "Uses turn-based chat template with explicit <start_of_turn>/<end_of_turn> tokens for prompt formatting."
+  },
+  // Legacy Claude (Text Completions API - deprecated)
+  "claude_legacy": {
+    "format": "plain",
+    "prepend": "Human: ",
+    "system_prefix": "Human: ",
+    "system_suffix": "\n\nAssistant:",
+    "notes": "Legacy Text Completions format. Deprecated in favor of Messages API. System prompt prepended as pseudo-user message."
+  }
+}

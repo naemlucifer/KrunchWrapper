@@ -1,0 +1,29 @@
+# Critical dependencies for KrunchWrapper server startup (must be installed first)
+uvicorn>=0.27.0          # ASGI server that runs the FastAPI application
+fastapi>=0.110.0         # Web framework for the API endpoints
+aiohttp>=3.9.0           # HTTP client for proxying requests to LLM APIs
+pydantic>=2.5.0          # Data validation (required by FastAPI)
+tiktoken>=0.5.2          # Tokenization for compression analysis
+
+# Additional core dependencies
+toml>=0.10.2             # Configuration file parsing
+requests>=2.31.0         # HTTP client (backup/compatibility)
+pytest>=8.0.0            # Testing framework
+
+# Model-specific tokenizer dependencies
+# For comprehensive model support, install all three:
+transformers>=4.35.0     # For modern models (Qwen, LLaMA 3, DeepSeek, Phi, etc.)
+sentencepiece>=0.1.99    # For LLaMA 1/2, Mistral, Claude, Yi, ChatGLM, etc.
+torch>=2.0.0             # Required by transformers for tokenizer operations
+
+# Note: tiktoken (already included above) handles OpenAI models (GPT-4, GPT-3.5, GPT-3)
+# All three libraries work together to provide complete model family coverage
+
+# Intelligent Pattern Detection Dependencies
+scikit-learn>=1.3.0      # Machine learning for pattern clustering and analysis
+numpy>=1.21.0            # Numerical computing (may already be installed via other deps)
+
+# Optional: Advanced Pattern Detection (install for enhanced intelligence)
+# spacy>=3.4.0           # Natural language processing for linguistic patterns  
+# networkx>=2.8.0        # Graph analysis for code structure patterns
+# sentence-transformers>=2.2.0  # Semantic embeddings for deep pattern similarity

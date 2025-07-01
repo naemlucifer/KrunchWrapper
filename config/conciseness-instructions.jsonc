@@ -1,0 +1,137 @@
+{
+    /* Conciseness Instructions Configuration
+       These instructions will be injected into system prompts when enabled
+       to encourage more concise and focused responses */
+    
+    /* Main conciseness instructions
+       TRIGGER: Always included when conciseness instructions are enabled
+       PURPOSE: Core brevity guidelines that apply to all response types */
+    "core_instructions": {
+        "enabled": true,
+        "instructions": [
+            "Be concise and direct in your responses",
+            "Respond as briefly and precisely as possible", 
+            "Provide only essential information unless specifically asked for details",
+            "Limit explanations unless explicitly requested"
+        ]
+    },
+    
+    /* Code-specific instructions
+       TRIGGER: Automatically included when programming language is detected (e.g., python, javascript, etc.)
+       PURPOSE: Encourage concise coding practices and minimal code comments */
+    "code_instructions": {
+        "enabled": true,
+        "instructions": [
+            "Use minimal but descriptive function and variable names",
+            "Minimize comments unless they clarify complex logic", 
+            "Prefer concise code patterns over verbose alternatives",
+            "Avoid unnecessary intermediate variables"
+        ]
+    },
+    
+    /* Conditional instructions based on context
+       TRIGGER: Based on keyword detection in user messages
+       PURPOSE: Context-specific brevity guidance that activates only when relevant */
+    "conditional_instructions": {
+        /* Long response context instructions
+           TRIGGER: When user asks for explanations, tutorials, or detailed information
+           KEYWORDS: "explain", "describe", "how to", "what is", "tutorial", "guide"
+           PURPOSE: Structure lengthy responses for better readability */
+        "long_response_context": {
+            "enabled": true,
+            "trigger_keywords": ["explain", "describe", "how to", "what is", "tutorial", "guide"],
+            "instructions": [
+                "Structure your response with clear headings",
+                "Lead with the key takeaway or conclusion",
+                "Use numbered steps for processes"
+            ]
+        },
+        
+        /* Debugging context instructions
+           TRIGGER: When user is reporting problems or asking for fixes
+           KEYWORDS: "debug", "error", "fix", "broken", "not working", "issue"
+           PURPOSE: Streamline troubleshooting responses */
+        "debugging_context": {
+            "enabled": true,
+            "trigger_keywords": ["debug", "error", "fix", "broken", "not working", "issue"],
+            "instructions": [
+                "Identify the specific problem first",
+                "Provide the corrected code immediately after diagnosis",
+                "Explain the fix in one concise sentence"
+            ]
+        }
+    },
+    
+    /* Custom instruction sets for specific use cases
+       TRIGGER: Manually enabled when extreme brevity modes are needed
+       PURPOSE: Special modes for maximum conciseness or code-only responses */
+    "custom_instruction_sets": {
+        /* Ultra-brief mode
+           TRIGGER: Manually enabled (set enabled: true)
+           PURPOSE: Maximum conciseness - use when responses need to be as short as possible
+           USE CASE: Quick answers, limited token budgets, or rapid-fire Q&A */
+        "ultra_brief": {
+            "enabled": false,
+            "instructions": [
+                "Respond in the fewest words possible",
+                "Use sentence fragments if they convey the meaning",
+                "Omit pleasantries and filler words",
+                "Provide direct answers without context unless essential"
+            ]
+        },
+        
+        /* Code-only mode
+           TRIGGER: Manually enabled (set enabled: true)
+           PURPOSE: Pure implementation without explanations
+           USE CASE: When user only wants executable code, no discussion */
+        "code_only": {
+            "enabled": false,
+            "instructions": [
+                "Provide only executable code without explanations",
+                "Include minimal inline comments only for complex logic",
+                "Omit example usage unless specifically requested"
+            ]
+        }
+    },
+    
+    /* Injection formatting options */
+    "formatting": {
+        /* Prefix to add before conciseness instructions */
+        "prefix": "💡 RESPONSE GUIDANCE:",
+        
+        /* Separator between individual instructions */
+        "instruction_separator": "\n• ",
+        
+        /* Suffix to add after conciseness instructions */
+        "suffix": "",
+        
+        /* Whether to wrap instructions in a distinctive section */
+        "use_section_wrapper": true,
+        
+        /* Section wrapper format */
+        "section_wrapper": {
+            "start": "\n\n📝 CONCISENESS GUIDELINES:\n",
+            "end": "\n"
+        }
+    },
+    
+    /* Selection criteria for which instructions to include
+       PURPOSE: Controls how instructions are prioritized and limited */
+    "selection_criteria": {
+        /* Always include core instructions if they are enabled
+           NOTE: Core instructions now have their own enabled flag in the core_instructions section */
+        "always_include_core": true,
+        
+        /* Include code instructions when programming language is detected and they are enabled
+           NOTE: Code instructions now have their own enabled flag in the code_instructions section */
+        "include_code_when_lang_detected": true,
+        
+        /* Maximum number of instructions to include (0 = no limit)
+           PURPOSE: Prevents system prompts from becoming too long with too many instructions */
+        "max_instructions": 6,
+        
+        /* Prioritize instructions by order in arrays (first = highest priority)
+           PURPOSE: When hitting max_instructions limit, keeps most important instructions first */
+        "prioritize_by_order": true
+    }
+} 

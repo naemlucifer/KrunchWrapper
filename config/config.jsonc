@@ -1,0 +1,655 @@
+{
+    /* Main configuration for KrunchWrapper compression features */
+      /* Language detection removed - dynamic compression works on any content */
+    
+    /* System prompt configuration */
+    "system_prompt": {
+        /* System prompt format to use from system-prompts.jsonc
+           Options: claude, gemini, chatgpt, chatml, qwen, deepseek, gemma, claude_legacy */
+        "format": "chatml",
+        
+        /* Interface engine to use for compression and system prompt handling
+           
+           ══════════════════════════════════════════════════════════════════════════
+           🎯 ANTHROPIC MODE: Forcing anthropic interface for optimal Claude handling
+           ══════════════════════════════════════════════════════════════════════════
+           
+           ANTHROPIC-OPTIMIZED CONFIGURATION:
+           • Direct Anthropic API format with native Claude system prompts
+           • Optimized compression decoder for Claude's prompt format
+           • Native support for Anthropic features like prompt caching
+           • Enhanced streaming compatibility for Claude models
+           
+           Options:
+           - "auto"        -> ✅ Auto-detect interface (good for mixed usage)
+           - "cline"       -> 🔧 OVERRIDE: Force Cline-specific handling for ALL requests
+           - "webui"       -> 🔧 OVERRIDE: Force WebUI-specific handling for ALL requests
+           - "sillytavern" -> 🔧 OVERRIDE: Force SillyTavern-specific handling for ALL requests
+           - "anthropic"   -> 🎯 ANTHROPIC MODE: Force Anthropic API-specific handling for ALL requests
+           - "standard"    -> 🔧 OVERRIDE: Force standard handling for ALL requests
+           - "roo"         -> 🚧 Future support for roo interface
+           - "aider"       -> 🚧 Future support for aider interface
+           
+           ANTHROPIC MODE BENEFITS:
+           - Native Claude system prompt format optimization
+           - Proper handling of Anthropic's separate system parameter
+           - Enhanced compression decoder format for Claude models
+           - Optimized for Anthropic prompt caching features
+           - Better token efficiency with Claude-specific formatting
+           
+           DEBUGGING: Set log_level to "DEBUG" in server.jsonc to see processing logs:
+           🔧 [ENGINE] Processing compression with anthropic interface
+           🎯 Anthropic API formatting: Ready
+           
+           Current: "anthropic" for optimal Claude/Anthropic API performance */
+        "interface_engine": "anthropic"
+    },
+    
+    /* Model-specific tokenizer configuration */
+    "model_tokenizer": {
+        /* Enable model-specific tokenizer validation
+           When true, uses appropriate tokenizers based on detected model family
+           When false, falls back to generic tiktoken validation */
+        "enabled": true,
+        
+        /* Default model family to use when model detection fails
+           Available model families:
+           
+           Anthropic Models:
+           - "claude"    -> Detects: claude, anthropic, anthropic/claude-3-5-sonnet
+           
+           OpenAI Models:
+           - "gpt-4"     -> Detects: gpt-4, gpt4, openai/gpt-4
+           - "gpt-3.5"   -> Detects: gpt-3.5, gpt-35, turbo, gpt-3.5-turbo
+           - "gpt-3"     -> Detects: davinci, curie, babbage, ada
+           
+           Meta LLaMA Models:
+           - "llama"     -> Detects: llama, llama2, llama-2, meta-llama/Llama-2-7b-chat-hf
+           - "llama3"    -> Detects: llama3, llama-3, meta-llama/Llama-3-8B-Instruct
+           - "codellama" -> Detects: codellama, code-llama
+           
+           Mistral Models:
+           - "mistral"   -> Detects: mistral, mixtral, mistralai/Mistral-7B-Instruct
+           
+           Google Models:
+           - "gemini"    -> Detects: gemini, bard, google/gemini-pro
+           - "palm"      -> Detects: palm, palm2
+           
+           Qwen Models:
+           - "qwen"      -> Detects: qwen, Qwen/Qwen2.5-Coder-32B-Instruct
+           - "qwen2"     -> Detects: qwen2, qwen-2
+           - "qwen3"     -> Detects: qwen3, qwen-3
+           
+           Other Models:
+           - "yi"        -> Detects: yi-, 01-ai, 01-ai/Yi-34B-Chat
+           - "deepseek"  -> Detects: deepseek, deepseek-ai/deepseek-coder
+           - "phi"       -> Detects: phi-, microsoft/phi
+           - "falcon"    -> Detects: falcon, tiiuae/falcon-7b-instruct
+           - "starcoder" -> Detects: starcoder, starcode
+           - "vicuna"    -> Detects: vicuna
+           - "alpaca"    -> Detects: alpaca
+           - "chatglm"   -> Detects: chatglm, glm-, THUDM/chatglm3-6b
+           
+           🎯 ANTHROPIC MODE: Set to "claude" for optimal Claude model tokenization
+        */
+        "default_model_family": "claude",
+        
+        /* Fallback validation method when model-specific tokenizer is unavailable
+           Options:
+           - "tiktoken"             -> Use generic GPT-4 tokenizer (cl100k_base)
+           - "character_estimation" -> Estimate tokens from character count (chars/4)
+           - "word_count"           -> Estimate tokens from word count */
+        "fallback_method": "tiktoken",
+        
+        /* Cache tokenizers for better performance (recommended: true)
+           When true, tokenizers are loaded once and cached for subsequent use
+           When false, tokenizers are loaded fresh for each validation (slower) */
+        "cache_tokenizers": true,
+        
+        /* Advanced model family mappings (optional)
+           You can override or extend model detection patterns here
+           Format: "model_family": ["pattern1", "pattern2", ...]
+           All patterns are automatically converted to lowercase for case-insensitive matching */
+        "custom_model_mappings": {
+            /* Example: Map specific generic model names to fix "Unknown model family" warning 
+               Note: Patterns are matched as case-insensitive substrings, so be specific to avoid false matches */
+            
+            /* Common fix for "Unknown model family for: a" - uncomment if needed:
+            "gpt-4": ["whatever", "something-else]
+            */
+            
+            /* Example custom model families (uncomment and modify as needed):
+            "my_custom_model": ["my-company/model", "internal-gpt"],
+            "local_llama": ["local-llama", "localhost/llama"],
+            "generic_gpt": ["generic-model", "custom-llm-proxy"]
+            */
+        }
+        
+        /* Tokenizer library requirements:
+           For full compatibility, install these libraries:
+           
+           pip install tiktoken      # For OpenAI models (GPT-4, GPT-3.5, etc.)
+           pip install transformers  # For modern models (Qwen, LLaMA 3, DeepSeek, etc.)
+           pip install sentencepiece # For LLaMA 1/2, Mistral, Claude, etc.
+           
+           The system will gracefully fall back if libraries are missing.
+        */
+    },
+    
+    "compression": {
+        /* Minimum number of characters in user prompt/request before compression is applied
+           🎯 SMART AGGRESSIVE: Lower than default but not extreme */
+        "min_characters": 50,
+        
+        /* Number of threads to use for token-level compression
+           🎯 OPTIMIZED: Good thread count for performance */
+        "threads": 48,
+        
+        /* Minimum token savings required for a substitution to be applied
+           🎯 INDIVIDUAL PATTERN QUALITY CONTROL: Filters patterns by token efficiency
+           
+           TOKEN SAVINGS STRATEGY:
+           • 0 (current): Apply ANY pattern that saves tokens, even 1 token
+             - Maximum compression coverage, includes minor patterns
+             - Good for initial discovery and comprehensive compression
+           • 1-2: Only patterns that save multiple tokens
+             - Eliminates trivial 1-token savings that may not be worth overhead
+             - Focuses on moderately valuable patterns
+           • 3-5: Only patterns with significant token savings
+             - High-value patterns only, very selective
+             - Minimal dictionary size, maximum per-pattern efficiency
+           
+           INTERACTION WITH min_compression_ratio:
+           • min_compression_ratio: Controls if compression happens at all
+           • min_token_savings: Controls which individual patterns are included
+           
+           FOR CLINE WORKFLOWS: Consider 1-2 to eliminate trivial patterns while
+           keeping valuable multi-token savings for code structures */
+        "min_token_savings": 0,
+        
+        /* Minimum number of times a token must appear to be considered for substitution
+           Higher values = Only compress frequently occurring tokens
+           Lower values = More aggressive compression but larger decoder overhead */
+        "min_occurrences": 2,
+        
+        /* Minimum compression ratio required to add decoder to system prompt
+           🎯 QUALITY CONTROL: Controls which patterns become reusable symbols
+           
+           STRATEGY FOR HEAVY HITTER ACCUMULATION:
+           • HIGHER values (0.02-0.05): Only excellent compression creates dictionaries
+             - Ensures only "heavy hitter" patterns become symbols
+             - Future turns reuse proven high-value symbols (great for Cline multi-turn sessions)
+             - Less symbol pollution, better long-term efficiency
+           • LOWER values (0.001-0.01): More permissive, creates more dictionaries
+             - Includes weaker patterns that barely save tokens
+             - May accumulate low-quality symbols over time
+           
+           FOR CLINE WORKFLOWS: Higher values recommended to build quality symbol libraries
+           that provide consistent benefits across long coding sessions */
+        "min_compression_ratio": 0.001,
+        
+        /* Whether to use token-level compression (true) or standard compression (false)
+           Token-level: Evaluates each substitution independently based on token savings
+           Standard: Applies all substitutions from the dictionary */
+        "use_token_compression": true,
+        
+        /* Whether to use aggressive compression mode
+           When true, prioritizes character savings over token savings
+           Useful for very large files where character count is more important */
+        "aggressive_mode": true,
+        
+        /* Character count threshold above which aggressive mode is automatically enabled
+           🎯 SMART AGGRESSIVE: Reasonable threshold */
+        "large_file_threshold": 1000,
+        
+        /* Client-specific compression control
+           List of client names/patterns to disable compression for
+           Useful for clients that have strict response format requirements
+           
+           DETECTION METHOD: Case-insensitive substring matching against User-Agent header
+           - Checks if any pattern in this list appears in the request's User-Agent string
+           - Patterns are converted to lowercase for matching
+           
+           EXAMPLES:
+           - "vscode"           -> Matches: VS Code extensions, vscode-lm, vscode-extension
+           - "cursor"           -> Matches: Cursor AI editor requests
+           - "postman"          -> Matches: Postman API testing tool
+           - "insomnia"         -> Matches: Insomnia REST client
+           - "thunder"          -> Matches: Thunder Client extension
+           - "rest-client"      -> Matches: REST Client extensions
+           - "httpie"           -> Matches: HTTPie command-line tool
+           - "curl"             -> Matches: cURL command-line requests
+           - "wget"             -> Matches: wget requests
+           - "python-requests"  -> Matches: Python requests library
+           - "node"             -> Matches: Node.js HTTP clients
+           - "chrome"           -> Matches: Chrome browser requests
+           - "firefox"          -> Matches: Firefox browser requests
+           - "safari"           -> Matches: Safari browser requests
+           - "edge"             -> Matches: Microsoft Edge requests
+           - "mobile"           -> Matches: Mobile app requests
+           - "ios"              -> Matches: iOS app requests
+           - "android"          -> Matches: Android app requests
+           - "bot"              -> Matches: Various bot/crawler requests
+           - "webhook"          -> Matches: Webhook delivery systems
+           
+           COMMON USE CASES:
+           - Disable for development tools that need exact JSON structure
+           - Disable for automated systems that can't handle compressed responses
+           - Disable for legacy clients with strict format requirements
+           - Disable for debugging/testing tools that need raw responses
+           
+           TIPS:
+           - Use specific patterns to avoid false matches (e.g., "vscode" not "code")
+           - Test with debug logging to see actual User-Agent strings
+           - Consider using "preserve_sse_format": true for streaming compatibility instead
+           - Empty array [] enables compression for all clients */
+        "disable_for_clients": [],
+        
+        /* CONFIGURATION EXAMPLES:
+        
+           // Example 1: Disable for all VS Code-related tools
+           "disable_for_clients": ["vscode", "cursor"],
+           
+           // Example 2: Disable for testing/debugging tools only
+           "disable_for_clients": ["postman", "insomnia", "thunder", "curl"],
+           
+           // Example 3: Disable for browsers but keep for editors
+           "disable_for_clients": ["chrome", "firefox", "safari", "edge"],
+           
+           // Example 4: Disable for mobile apps only
+           "disable_for_clients": ["mobile", "ios", "android"],
+           
+           // Example 5: Conservative approach - disable for common problematic clients
+           "disable_for_clients": ["vscode", "postman", "curl", "bot"],
+           
+           // Example 6: Aggressive compression - only disable for known broken clients
+           "disable_for_clients": ["legacy-client", "broken-parser"],
+           
+           // Example 7: Disable for all automated tools
+           "disable_for_clients": ["bot", "crawler", "spider", "webhook", "automated"],
+           
+                       // Current setting: Enable compression for ALL clients
+            "disable_for_clients": [],
+            
+           DEBUGGING TIPS:
+           1. Enable debug logging to see User-Agent strings:
+              Set "log_level": "DEBUG" in server.jsonc
+              
+           2. Common User-Agent patterns you might see:
+              - "Mozilla/5.0 ... vscode/1.85.0"           (VS Code)
+              - "PostmanRuntime/7.28.4"                   (Postman)
+              - "insomnia/2023.5.8"                       (Insomnia)
+              - "curl/7.68.0"                             (cURL)
+              - "python-requests/2.28.1"                  (Python)
+              - "Mozilla/5.0 ... Chrome/120.0.0.0"       (Chrome)
+              
+           3. Test your patterns:
+              - Send a request and check logs for: "🔍 [ALL REQUESTS] Headers:"
+              - Look for: "🚫 [ENGINE] Compression disabled for client: [pattern]"
+              - Verify: "🔄 [PROXY] Processing [engine] request without compression"
+              
+           4. If compression isn't being disabled when expected:
+              - Check that your pattern matches the actual User-Agent (case-insensitive)
+              - Make sure the pattern is specific enough to avoid false matches
+              - Verify the server restarted after config changes
+        */
+        
+        /* Disable compression specifically for Cline requests
+           When true, all requests detected as coming from Cline will bypass compression
+           This is a temporary fix for Cline SSE compatibility issues */
+        "disable_compression_for_cline": false,
+        
+        /* Enable selective tool call compression
+           When true, compresses content within tool calls while preserving tool call structure
+           When false, skips compression entirely for content containing tool calls
+           This allows compression of large file contents in tool calls while maintaining Cline compatibility */
+        "selective_tool_call_compression": true,
+        
+        /* Minimum size for tool call content fields to be considered for compression
+           Only content fields larger than this will be compressed within tool calls */
+        "tool_call_min_content_size": 300,
+        
+        /* Cline-compatible system prompt mode
+           When true, preserves Cline's original system prompt and adds compression decoder as a separate message
+           When false, merges compression decoder with existing system prompts (standard behavior)
+           This prevents conflicts between Cline's system prompt and compression instructions */
+        "cline_preserve_system_prompt": true
+    },
+    
+    "conversation_compression": {
+        /* Enable conversation-aware compression that maintains state across turns */
+        "enabled": true,
+        
+        /* Compression mode for conversation handling
+           - "stateful": Optimized for persistent KV cache servers (only new symbols in system prompts)
+           - "stateless": Standard mode for APIs that don't preserve KV cache across requests */
+        "mode": "stateful",
+        
+        /* Maximum number of conversations to keep in memory */
+        "max_conversations": 1000,
+        
+        /* How often to cleanup old conversation states (seconds) */
+        "cleanup_interval": 3600,
+        
+        /* Minimum net efficiency required to continue compression in a conversation
+           Net efficiency = compression_ratio - overhead_ratio
+           If recent turns fall below this, compression will be disabled for the conversation */
+        "min_net_efficiency": 0.01,
+        
+        /* Number of recent turns to consider for efficiency trend analysis */
+        "efficiency_trend_window": 3,
+        
+        /* Maximum turns before applying stricter efficiency requirements
+           Long conversations get diminishing returns, so we're more selective */
+        "long_conversation_threshold": 20,
+        
+        /* Stricter net efficiency requirement for long conversations */
+        "long_conversation_min_efficiency": 0.015,
+        
+        /* Whether to force conversation compression even if efficiency is poor
+           Useful for testing or when you want consistent compression regardless of efficiency */
+        "force_compression": false,
+        
+        /* KV Cache optimization threshold for short responses
+           Responses shorter than this (in characters) will use KV cache optimization
+           instead of triggering full recompression. This allows the model to use
+           its key-value cache for very short responses like "cool", "ok", "thanks", etc.
+           Set to 0 to disable KV cache optimization */
+        "kv_cache_threshold": 20
+    },
+
+    /* Comment Stripping Configuration
+       Strip comments from code before compression to save additional tokens */
+    "comment_stripping": {
+        /* Enable comment stripping functionality
+           When true, strips comments from detected code before compression runs */
+        "enabled": true,
+        
+        /* Preserve important comments like license headers, copyright notices, etc.
+           When true, preserves comments that appear to contain copyright, license, author, or version information */
+        "preserve_license_headers": true,
+        
+        /* Preserve shebang lines (#! at start of files)
+           When true, preserves shebang lines which are needed for script execution */
+        "preserve_shebang": true,
+        
+        /* Preserve docstrings in languages that support them (e.g., Python)
+           When true, preserves function and class docstrings which are often important for API documentation */
+        "preserve_docstrings": true,
+        
+        /* Minimum line length to keep after stripping comments
+           Lines shorter than this (after comment removal) will be kept as empty lines to preserve line numbers */
+        "min_line_length_after_strip": 3,
+        
+        /* Language-specific settings
+           Control which languages have comment stripping enabled */
+        "languages": {
+            "python": true,
+            "javascript": true,
+            "c_cpp": true,
+            "html": true,
+            "css": true,
+            "sql": true,
+            "shell": true
+        }
+    },
+    
+    /* Dynamic Dictionary Configuration
+       Analyzes user prompts for compression opportunities and generates temporary dictionaries
+       
+       🎯 OPTIMIZED FOR MAXIMUM COMPRESSION:
+       - Aggressive thresholds for maximum pattern detection
+       - Larger dictionary sizes for better coverage
+       - Lower frequency requirements to catch more patterns
+       - Token-boundary aware compression validation
+    */
+    "dynamic_dictionary": {
+        /* Enable dynamic dictionary analysis
+           When true, analyzes user prompts for repetitive patterns and creates temporary dictionaries */
+        "enabled": true,
+        
+        /* Minimum length for compression tokens 
+           🎯 SMART AGGRESSIVE: Minimum viable length for good compression */
+        "min_token_length": 3,
+        
+        /* Minimum frequency required for a token to be considered for compression
+           🎯 SMART AGGRESSIVE: Patterns must appear multiple times to be worth it */
+        "min_frequency": 2,
+        
+        /* Maximum number of entries in a generated temporary dictionary
+           🎯 MAXIMUM AGGRESSIVE: Use entire available symbol pool */
+        "max_dictionary_size": 262,
+        
+        /* Use overhead-driven compression limits instead of artificial caps
+           When true, uses actual token cost/benefit analysis instead of arbitrary limits */
+        "use_overhead_driven_limits": true,
+        
+        /* Minimum compression benefit required to create a temporary dictionary
+           🎯 DYNAMIC DICTIONARY QUALITY GATE: Controls when to create new dictionaries
+           
+           DIFFERENCE FROM min_compression_ratio:
+           • compression_threshold: Controls DICTIONARY CREATION (this setting)
+             - Applied DURING pattern analysis phase
+             - Decides: "Should we create a temporary dictionary for these patterns?"
+             - If patterns don't meet threshold, use existing/priority dictionaries only
+           • min_compression_ratio: Controls FINAL COMPRESSION ACCEPTANCE
+             - Applied AFTER compression is complete
+             - Decides: "Should we use the compression results or send original?"
+             - Final go/no-go decision for the entire compression process
+           
+           WORKFLOW: Pattern Analysis → compression_threshold → Dictionary Creation 
+                     → Compression → min_compression_ratio → Accept/Reject Results
+           
+           STRATEGY FOR HEAVY HITTERS:
+           • HIGHER values (0.02-0.05): Only create dictionaries for excellent patterns
+           • LOWER values (0.005-0.01): More aggressive dictionary creation
+           
+           FOR CLINE: Consider 0.02 to ensure only high-quality temporary dictionaries
+           are created, reducing overhead while maximizing pattern value */
+        "compression_threshold": 0.01,
+        
+        /* Enable parameterized pattern detection
+           🎯 NEW: Enable advanced pattern detection with variable parts */
+        "enable_parameterized_patterns": true,
+        
+        /* Enable semantic grouping of similar patterns
+           🎯 NEW: Group semantically similar patterns for unified compression */
+        "enable_semantic_grouping": true,
+        
+        /* Enable adaptive multi-pass compression
+           🎯 NOW RE-ENABLED: Format bugs fixed, should work correctly */
+        "multi_pass_adaptive": true,
+        
+        /* Enable text preprocessing for better compression
+           🎯 NEW: Normalize text before compression for better patterns */
+        "preprocessing_enabled": true,
+        
+        /* Enable substring analysis within longer tokens
+           🎯 OPTIMIZED: Enable for maximum pattern detection */
+        "enable_substring_analysis": true,
+        
+        /* Enable phrase analysis for multi-word expressions
+           When true, looks for repeated multi-word patterns like "log_message" */
+        "enable_phrase_analysis": true,
+        
+        /* Enable pattern analysis for structured content
+           When true, detects programming constructs, function calls, etc. */
+        "enable_pattern_analysis": true,
+        
+        /* Enable advanced pattern analysis
+           🎯 OPTIMIZED: Enable for maximum pattern detection */
+        "enable_advanced_pattern_analysis": true,
+        
+        /* Enable context-aware token analysis
+           When true, considers context when evaluating compression value */
+        "enable_context_aware_analysis": true,
+        
+        /* Enable aggressive symbol optimization
+           🎯 OPTIMIZED: Enable for maximum compression efficiency */
+        "enable_aggressive_symbol_optimization": true,
+        
+        /* Maximum length for n-gram pattern analysis
+           🎯 CONFIGURABLE: Controls how long repeated patterns can be detected
+           Higher values find longer patterns but increase processing time */
+        "max_ngram_length": 100,
+        
+        /* Minimum prompt length to consider for dynamic analysis
+           🎯 SMART AGGRESSIVE: Lower but reasonable threshold */
+        "min_prompt_length": 100,
+        
+        /* Automatic detection threshold for repetitive content
+           🎯 SMART AGGRESSIVE: Reasonable threshold for pattern detection */
+        "auto_detection_threshold": 0.15,
+        
+        /* Maximum age in hours for temporary dictionary files */
+        "cleanup_max_age_hours": 24,
+        
+        /* Enable automatic cleanup of old temporary dictionaries */
+        "auto_cleanup": true,
+        
+        /* Optimization settings for pattern detection and compression */
+        "optimization": {
+            /* Enable smart deduplication that preserves valuable tokens
+               When true, eliminates conflicting patterns intelligently */
+            "smart_deduplication": true,
+            
+            /* Enable multi-pass analysis for more thorough pattern detection
+               🎯 OPTIMIZED: Enable for maximum compression opportunities */
+            "multi_pass_analysis": true,
+            
+            /* Enable length-based prioritization (longer tokens get priority)
+               When true, prioritizes compressing longer tokens for better savings */
+            "length_based_priority": true,
+            
+            /* Enable frequency-length hybrid scoring
+               When true, balances frequency and length when scoring patterns */
+            "hybrid_scoring": true,
+            
+            /* Minimum token savings threshold for inclusion
+               🎯 SMART AGGRESSIVE: Meaningful threshold for quality patterns */
+            "min_token_savings_threshold": 0.05,
+            
+            /* Use optimized symbol selection with multi-threaded assignment
+               When true, uses the faster optimized symbol selection algorithm */
+            "use_optimized_symbol_selector": true,
+            
+            /* Use model-optimized symbol pool for maximum efficiency
+               🎯 NEW: Use Unicode symbols optimized for each model */
+            "use_model_optimized_symbols": true,
+            
+            /* Use optimal global compression for mathematical optimization
+               When true, finds the globally optimal compression subset */
+            "use_optimal_global_compression": true,
+            
+            /* Enable performance benchmarking for analysis timing
+               When true, logs detailed performance metrics during analysis */
+            "enable_performance_benchmarking": true,
+            
+            /* Use economics-driven pattern selection instead of arbitrary thresholds
+               🎯 OPTIMIZED: Always use economics-driven selection */
+            "economics_driven_selection": true,
+            
+            /* Minimum net token savings required for compression (after overhead costs)
+               🎯 SMART AGGRESSIVE: Meaningful net savings requirement */
+            "min_net_token_savings": 0.02,
+            
+            /* Enable context-aware symbol optimization
+               🎯 NEW: Optimize symbols based on actual usage context */
+            "context_aware_symbol_optimization": true,
+            
+            /* Enable diminishing returns analysis for multi-pass
+               🎯 NEW: Stop compression when benefits become marginal */
+            "enable_diminishing_returns_analysis": true,
+            
+            /* Threshold for stopping multi-pass when improvement drops below this
+               🎯 SMART AGGRESSIVE: Stop when improvement becomes marginal */
+            "diminishing_returns_threshold": 0.005
+        },
+        
+        /* Blacklist patterns to never compress (regex patterns) */
+        "blacklist_patterns": [
+            "^\\d+$",
+            "^[^a-zA-Z]*$",
+            ".*\\$\\{.*\\}.*",
+            ".*\\[\\d+\\].*",
+            ".*\\.\\d+",
+            "^https?:\\/\\/.*",
+            "^[_A-Z]+_$"
+        ]
+    },
+    
+    /* Proxy configuration */
+    "proxy": {
+        /* Whether to filter timeout-related parameters from client requests
+           When true, removes timeout parameters to prevent client-side timeout constraints
+           from interfering with compression processing (recommended: true)
+           
+           Filtered parameters: timeout, request_timeout, response_timeout, connection_timeout,
+           read_timeout, write_timeout, stream_timeout, api_timeout */
+        "filter_timeout_parameters": true,
+        
+        /* Timeout configuration for streaming connections */
+        "timeout": {
+            /* Connection timeout in seconds for streaming requests
+               How long to wait when establishing connection to target server */
+            "streaming_connect_timeout": null,
+            
+            /* Total timeout in seconds for streaming requests (null = no timeout)
+               How long to wait for the entire streaming response
+               null is recommended for streaming to avoid premature disconnection */
+            "streaming_total_timeout": null,
+            
+            /* Allow request payloads to override timeout settings
+               When true, timeout parameters in client requests can override these defaults
+               When false, these config values are always used regardless of client requests */
+            "enable_timeout_override": true
+        }
+    },
+    
+    /* Streaming response configuration for client compatibility */
+    "streaming": {
+        /* Preserve exact SSE (Server-Sent Events) format for client compatibility
+           When true, maintains strict "data: {json}\n\n" format required by Cline and other clients
+           When false, uses more flexible streaming format that may break some clients */
+        "preserve_sse_format": true,
+        
+        /* Validate JSON chunks before sending to client
+           When true, validates streaming chunks to ensure proper JSON structure
+           Helps prevent "Unexpected API Response" errors in clients like Cline */
+        "validate_json_chunks": true,
+        
+        /* Only decompress streaming chunks when compression symbols are present
+           When true, checks for compression symbols before attempting decompression
+           This prevents breaking JSON structure in clean chunks */
+        "smart_decompression": true,
+        
+        /* Enable Cline-specific streaming compatibility mode
+           When true, uses enhanced streaming processing for Cline requests
+           Includes additional validation and error handling */
+        "cline_compatibility_mode": true,
+        
+        /* Maximum time to wait for streaming chunk processing (seconds)
+           Prevents hanging on malformed chunks (null = no timeout) */
+        "chunk_processing_timeout": null
+    },
+    
+    /* Conciseness instructions configuration */
+    "conciseness_instructions": {
+        /* Enable injection of conciseness instructions into system prompts
+           When true, adds configurable instructions to encourage brief, precise responses */
+        "enabled": true,
+        
+        /* Configuration file for conciseness instructions
+           Path relative to config directory */
+        "instructions_file": "conciseness-instructions.jsonc",
+        
+        /* Position where to inject instructions relative to compression decoder
+           Options: "before", "after", "separate_section" */
+        "injection_position": "after",
+        
+        /* Whether to apply instructions only when compression is active
+           When true, instructions are only added when compression decoder is present
+           When false, instructions are always added when enabled */
+        "only_with_compression": false
+    }
+} 

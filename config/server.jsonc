@@ -1,0 +1,386 @@
+{
+    // Server Configuration for KrunchWrapper Compression Proxy
+    
+    // Network settings
+    "host": "0.0.0.0",              // Host to bind the proxy server to (0.0.0.0 = all interfaces)
+    "port": 5002,                   // Port for the proxy server to listen on
+    
+    // Target LLM API settings  
+    "target_host": "localhost",           // Your local server
+    "target_port": 5001,                  // Common local LLM server port (adjust as needed)
+    "target_use_https": false,            // Local servers typically use HTTP
+    
+    // ────────────────────────────────────────────────────────────────────────────
+    // 🔧 CONFIGURATION PRESETS - UNCOMMENT THE SETUP YOU WANT TO USE
+    // ────────────────────────────────────────────────────────────────────────────
+    
+    /* ═══════════════════════════════════════════════════════════════════════════
+       🏠 LOCAL SERVER SETUP (CURRENT ACTIVE CONFIGURATION)
+       ═══════════════════════════════════════════════════════════════════════════
+       Perfect for: LM Studio, Ollama, Text Generation WebUI, vLLM, LocalAI, etc.
+       Flow: Client → KrunchWrap (compression) → Local Server → External APIs
+       
+       ✅ CURRENT SETTINGS (ACTIVE):
+       "target_host": "localhost",
+       "target_port": 1234,              // 🔧 CHANGE THIS to match your server
+       "target_use_https": false,
+       "api_key": "",
+       
+       📋 COMMON LOCAL SERVER PORTS:
+       • LM Studio:              1234
+       • Ollama:                 11434
+       • vLLM:                   8000
+       • Text Generation WebUI:  5000 or 7860
+       • LocalAI:                8080
+       • Llama.cpp server:       8080
+       • OpenWebUI:              3000
+       
+       📱 CLIENT CONFIGURATION OPTIONS:
+       • 🌐 Embedded WebUI: http://localhost:5173 (starts automatically)
+       • 🎭 SillyTavern: API URL = "http://localhost:5002/v1"
+       • 🔧 Cline: Use OpenAI provider with "http://localhost:5002/v1"
+       • 📱 Any Client: Point to http://localhost:5002 instead of your local server
+       
+       💡 RECOMMENDED FOR BEGINNERS: Use the embedded WebUI!
+       Just run ./start.sh and open http://localhost:5173 in your browser.
+    */
+    
+    /* ═══════════════════════════════════════════════════════════════════════════
+       🤖 DIRECT ANTHROPIC API SETUP (FOR CLINE) - ✅ TESTED & WORKING
+       ═══════════════════════════════════════════════════════════════════════════
+       Perfect for: Cline with direct Anthropic API access
+       Flow: Cline → KrunchWrap (compression) → api.anthropic.com
+       Status: ✅ Fully tested and debugged - compression fix implemented
+       
+       🔧 TO ACTIVATE: Uncomment these lines and comment out the localhost config above
+       
+       // "target_host": "api.anthropic.com",
+       // "target_port": 443,
+       // "target_use_https": true,
+       // "api_key": "sk-ant-your-actual-anthropic-api-key-here",
+       
+       📱 CLINE CONFIGURATION (.vscode/settings.json):
+       {
+         "cline.anthropicBaseUrl": "http://localhost:5002",
+         "cline.anthropicApiKey": "sk-ant-your-actual-anthropic-api-key-here"
+       }
+    */
+    
+    /* ═══════════════════════════════════════════════════════════════════════════
+       🧠 DIRECT OPENAI API SETUP - ⚠️ EXPERIMENTAL (NOT YET TESTED)
+       ═══════════════════════════════════════════════════════════════════════════
+       ⚠️ WARNING: This configuration is theoretical and has not been tested!
+       The direct Anthropic integration required significant debugging and fixes.
+       Direct OpenAI integration may have similar issues that need to be resolved.
+       
+       Use at your own risk - may not work properly without additional development.
+       For reliable OpenAI access, use the Local Server setup with your local proxy.
+       
+       🔧 TO EXPERIMENT: Uncomment these lines and comment out the localhost config above
+       
+       // "target_host": "api.openai.com",
+       // "target_port": 443,
+       // "target_use_https": true,
+       // "api_key": "sk-your-actual-openai-api-key-here",
+       
+       📱 CLIENT CONFIGURATION (if it works):
+       • SillyTavern: API URL = "http://localhost:5002/v1"
+       • Any OpenAI Client: Base URL = "http://localhost:5002/v1"
+    */
+    
+    /* ═══════════════════════════════════════════════════════════════════════════
+       ⚡ OTHER DIRECT API SETUPS - ⚠️ EXPERIMENTAL (NOT IMPLEMENTED)
+       ═══════════════════════════════════════════════════════════════════════════
+       ⚠️ WARNING: These configurations are theoretical examples only!
+       None of these have been implemented or tested. They will likely require:
+       • Custom endpoint handlers (like we created for Anthropic)
+       • API-specific authentication and headers  
+       • Response format handling
+       • Compression pipeline integration
+       • Significant development and testing
+       
+       🔸 GOOGLE GEMINI (NOT IMPLEMENTED):
+       // Would need custom /v1/models/{model}:generateContent endpoint
+       // "target_host": "generativelanguage.googleapis.com",
+       // "target_port": 443,
+       // "target_use_https": true,
+       // "api_key": "your-gemini-api-key",
+       
+       🔸 DEEPSEEK (NOT IMPLEMENTED):
+       // Would need testing and possible custom handling
+       // "target_host": "api.deepseek.com",
+       // "target_port": 443,
+       // "target_use_https": true,
+       // "api_key": "sk-your-deepseek-api-key",
+       
+       🔸 CUSTOM REMOTE SERVER (NOT TESTED):
+       // Only works if your server uses OpenAI-compatible format
+       // "target_host": "your-remote-server.com",
+       // "target_port": 8000,
+       // "target_use_https": true,
+       // "api_key": "your-api-key-if-needed",
+       
+       📝 TO ACTUALLY IMPLEMENT THESE:
+       See documentation/EXTENDING_KRUNCHWRAP.md for step-by-step guide
+    */
+    
+    // ────────────────────────────────────────────────────────────────────────────
+    // 🚀 QUICK SETUP GUIDE
+    // ────────────────────────────────────────────────────────────────────────────
+    // 1. Choose your setup above (Local Server, Direct Anthropic, Direct OpenAI, etc.)
+    // 2. Comment out current config and uncomment your chosen setup
+    // 3. Update client configurations (SillyTavern, Cline, etc.) to point to localhost:5002
+    // 4. Start KrunchWrap: ./start.sh (Linux/Mac) or .\start.ps1 (Windows)
+    // 5. Enjoy 15-40% token compression on all requests!
+    // ────────────────────────────────────────────────────────────────────────────
+    
+    // Compression settings
+    "min_compression_ratio": 0.01,  // Minimum compression ratio (1%) required to add decoder overhead
+                                    // If compression saves less than this percentage, skip compression
+    
+    // Conversation compression settings
+    "conversation_compression": {
+        "enabled": true,                // Enable conversation-aware compression
+        "mode": "stateful",             // "stateful" for persistent KV cache servers, "stateless" for standard APIs
+        "kv_cache_threshold": 50,     // Character threshold for KV cache optimization (increased for larger messages)
+        "max_conversations": 1000,      // Maximum number of conversations to track
+        "min_net_efficiency": 0.01      // Minimum net efficiency to continue compression (optimized for stateful mode)
+    },
+    
+    // Authentication - AUTO-DETECTED FROM config.jsonc
+    "api_key": "",                       // Default: empty (will auto-switch to Anthropic API key when needed)
+    
+    /* ══════════════════════════════════════════════════════════════════════════
+       🎯 ANTHROPIC AUTO-CONFIGURATION SECTION
+       ══════════════════════════════════════════════════════════════════════════
+       This section is automatically used when config.jsonc has:
+       - "format": "claude" AND "interface_engine": "anthropic"
+       
+       No manual switching needed! Just set those two values in config.jsonc
+       and these settings will be applied automatically. */
+    "anthropic": {
+        "target_host": "api.anthropic.com",
+        "target_port": 443,
+        "target_use_https": true,
+        "api_key": "sk-ant-your-actual-anthropic-api-key-here",  // 🔧 REQUIRED: Replace with your actual Anthropic API key
+                                        // Get your API key from: https://console.anthropic.com/account/keys
+                                        // Format: sk-ant-api03-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        "conversation_compression": {
+            "enabled": true,
+            "mode": "stateful",
+            "kv_cache_threshold": 50,
+            "max_conversations": 1000,
+            "min_net_efficiency": 0.01
+        }
+    },
+    
+    /* Unified Logging Configuration - Single Source of Truth
+       ======================================================
+       This section controls ALL logging systems in KrunchWrapper:
+       - Regular file and console logging
+       - Async logging performance monitoring  
+       - All verbosity and performance settings
+       
+       No other config files control logging - this is the complete configuration.
+       
+       🔍 IMPORTANT: Understand the difference between LOG LEVEL and VERBOSE LOGGING:
+       
+       LOG LEVEL (DEBUG/INFO/WARNING/ERROR):
+       - Controls which severity messages appear in logs
+       - DEBUG: Shows basic operational messages like "Request received", "Model: gpt-4"
+       - INFO: Standard operations and performance metrics only
+       - Both file AND console use the SAME level (no separate file vs terminal control)
+       
+       VERBOSE LOGGING (true/false):
+       - Controls how DETAILED the content is within those messages
+       - Shows FULL request/response content, compression before/after text, detailed rules
+       - Can generate MASSIVE log files with complete text content
+       - This is MUCH MORE detailed than DEBUG level logging
+       - Even with DEBUG level, you won't see full content unless verbose_logging is enabled */
+    "logging": {
+        /* Basic Logging Settings */
+        
+        /* CONTENT DETAIL CONTROL: Enable verbose content logging
+           Shows full original/compressed content, complete LLM responses, compression rules
+           WARNING: Much more detailed than DEBUG level - can generate massive logs!
+           Affects both file/console logging and async performance monitoring */
+        "verbose_logging": false,
+        
+        /* LOG / TERMINAL MESSAGE LEVEL CONTROL: Which severity levels to show
+           🎯 UNIFIED CONTROL: This setting applies to:
+           - File logging (logs/[name].log files) - SAME level as console
+           - Console output (terminal display) - SAME level as file
+           - Async logging performance monitoring
+           - All KrunchWrapper components
+           - "DEBUG": Shows basic operational messages like "Request received", "Model: gpt-4"
+           - "INFO": Standard operations and performance metrics only
+           NOTE: This is SEPARATE from verbose_logging above */
+        "log_level": "INFO",
+        
+        /* Enable file logging to capture detailed logs
+           When true: Creates timestamped log files in logs/ directory
+           When false: Console output only */
+        "file_logging": true,
+        
+        /* FILE LOG LEVEL CONTROL: Which severity levels to show in log files
+           Can be different from console log_level for more detailed file logging
+           DEBUG: All messages including detailed compression info
+           INFO: Standard operations and performance metrics only
+           WARNING: Only warnings and errors
+           ERROR: Only errors
+           Can also be set via KRUNCHWRAPPER_FILE_LOG_LEVEL environment variable */
+        "file_log_level": "DEBUG",
+        
+        /* Cline streaming content logging configuration
+           Controls detailed logging of streaming chunk content for debugging
+           WARNING: This can generate MASSIVE log files with streaming responses!
+           Only enable for debugging specific streaming issues.
+           Example: One 1000-token response = ~300 log lines
+           
+           Options:
+           - false: Disable all Cline stream content logging
+           - "terminal": Log to terminal/console only
+           - "file": Log to file only  
+           - "both": Log to both terminal and file
+           - true: Same as "both" (for backward compatibility)
+           
+           Note: Config message only displays when log_level is DEBUG */
+        "cline_stream_content_logging": false,
+        
+        /* When true, logs detailed information about requests that are
+           passed through without compression (e.g., don't meet min_characters
+           or min_compression_ratio thresholds). Shows request content and
+           reasoning for why compression was skipped.
+           Can also be set via KRUNCHWRAPPER_SHOW_PASSTHROUGH environment variable */
+        "show_passthrough_requests": true,
+        
+        /* When true, verbose logging is only written to log files, 
+           not displayed in the terminal/console. This keeps the console 
+           output clean while still maintaining detailed file logs.
+           Can also be set via KRUNCHWRAPPER_HIDE_VERBOSE_CONSOLE environment variable */
+        "hide_verbose_from_console": true,
+        
+        /* SELECTIVE DEBUG SUPPRESSION: List of module names to suppress DEBUG logging for
+           When enabled, these modules will have their log level set to INFO instead of DEBUG
+           This helps reduce noise from verbose modules while keeping overall DEBUG level active
+           Example modules: "core.dynamic_dictionary", "core.compress", "core.conversation_compress"
+           Can also be set via KRUNCHWRAPPER_SUPPRESS_DEBUG_MODULES environment variable (comma-separated) */
+        "suppress_debug_modules": [
+            // "core.dynamic_dictionary",   // Uncomment to suppress debug logging from dynamic dictionary operations
+            // "core.compress"              // Uncomment to suppress debug logging from compression operations
+        ],
+        
+        /* Async Logging Performance Settings */
+        
+        /* Enable global async logging for ALL Python logging calls
+           When true, adds high-performance async processing layer to all logging
+           When false, uses standard synchronous logging only */
+        "async_logging_enabled": true,
+        
+        /* Maximum async log queue size
+           0 = unlimited queue (recommended for high volume)
+           Higher numbers = more memory usage but better performance under load
+           Lower numbers = less memory usage but may drop messages under high load */
+        "async_max_queue_size": 0,
+        
+        /* Number of log messages to process together in batches
+           🎯 PERFORMANCE TUNING:
+           - Higher values = more efficient processing but higher latency
+           - Lower values = lower latency but more CPU overhead
+           - Recommended: 50 for balanced performance
+           - Debugging: 1 for immediate processing
+           - High volume: 100-500 for maximum efficiency */
+        "async_batch_size": 50,
+        
+        /* Seconds to wait when collecting log message batches
+           🎯 RESPONSIVENESS TUNING:
+           - Lower values = more responsive logging but higher CPU usage
+           - Higher values = more efficient batching but higher latency
+           - Recommended: 0.1 for balanced performance
+           - Debugging: 0.001 for immediate processing
+           - High volume: 0.5 for maximum efficiency */
+        "async_worker_timeout": 0.1,
+        
+        /* Performance Monitoring Settings */
+        
+        /* Enable async logging performance monitoring
+           When true, tracks timing and performance metrics for logging operations */
+        "async_performance_monitoring_enabled": true,
+        
+        /* Track system prompt processing operations in performance monitoring */
+        "async_track_system_prompts": true,
+        
+        /* Track compression operations in performance monitoring */
+        "async_track_compression": true,
+        
+        /* Maximum number of operations to track for performance stats
+           Higher values = more detailed performance history but more memory usage */
+        "async_max_tracked_operations": 100,
+        
+        /* Terminal Output Formatting */
+        
+        /* Simplify terminal output format by removing timestamp and logger name
+           When true: Terminal shows only "INFO - 📄 Log file: /path/to/file"
+           When false: Terminal shows full format "2025-06-25 15:00:25,357 - server.config    - INFO - 📄 Log file: /path/to/file"
+           Note: Log files always use the full format regardless of this setting */
+        "simplify_terminal_output": true,
+        
+        /* DEBUG CATEGORY TOGGLES: Fine-grained control over debug logging categories
+           ======================================================================
+           When log_level is set to DEBUG, you can selectively enable/disable specific
+           categories of debug messages. When a category is disabled, those debug 
+           messages will be suppressed even if the overall log level is DEBUG.
+           
+           This allows you to focus on specific areas during debugging without being
+           overwhelmed by debug output from all subsystems.
+           
+           🎯 USAGE: Set log_level to "DEBUG" above, then enable only the categories
+           you want to see. Categories set to false will be filtered out.
+           
+           📝 NOTE: This only affects DEBUG level messages. INFO, WARNING, and ERROR
+           messages are not affected by these settings. */
+        "debug_categories": {
+            /* Request Processing & Client Detection */
+            "request_processing": true,     // [ALL REQUESTS], [DEBUG] - Raw request analysis and parsing
+            "cline_integration": true,      // [CLINE] - Cline client detection and special handling
+            "session_management": true,     // [SESSION] - Session ID generation and tracking
+            
+            /* Compression Operations & Analysis */
+            "compression_core": true,       // Core compression analysis, dynamic dictionary operations
+            "compression_proxy": true,      // [PROXY] - Proxy-level compression decisions and metrics
+            "conversation_detection": true, // [CONVERSATION DETECTION] - Multi-turn conversation analysis
+            "kv_cache_optimization": true,  // [KV DEBUG], [KV CACHE] - KV cache optimization logic
+            "conversation_compression": true, // [CONVERSATION COMPRESS] - Conversation-aware compression
+            "symbol_management": true,      // Symbol assignment, model-specific tokenization
+            
+            /* Response Processing & Decompression */
+            "streaming_responses": true,    // [STREAMING DEBUG], [PROXY STREAMING DEBUG] - Streaming decompression
+            "response_decompression": true, // [NON-STREAMING DEBUG], [PROXY DECOMPRESSION DEBUG] - Response decompression
+            "token_calculations": true,     // Token calculation and compression ratio reporting
+            
+            /* System Operations & Infrastructure */
+            "system_fixes": true,          // [FIX] - System corrections and adaptations
+            "request_filtering": true,     // [TIMEOUT FILTER] - Request parameter filtering
+            "cleanup_operations": true,    // [CLEANUP] - Compression artifact cleanup
+            "error_handling": true,        // [ERROR] - Detailed error reporting and diagnostics
+            
+            /* Server Communication & Forwarding */
+            "server_communication": true,  // Target server communication, props forwarding
+            "model_context": true,         // Model context setting and management
+            
+            /* Development & Testing */
+            "payload_debugging": false,    // [PAYLOAD DEBUG] - Detailed payload inspection (very verbose)
+            "test_utilities": false        // Test-specific debug output (very verbose)
+        }
+    },
+    
+    // WebUI settings
+    "webui_enabled": true,              // Enable/disable automatic WebUI launching
+                                        // When true, start scripts will launch the WebUI and open browser
+                                        // Can also be set via KRUNCHWRAPPER_WEBUI_ENABLED environment variable.
+    "webui_port": 5173                  // Port for the WebUI development server
+                                        // This is the port where the React dev server will run
+                                        // Can also be set via KRUNCHWRAPPER_WEBUI_PORT environment variable.
+    
+    // NOTE: Cline integration is now controlled by "system_prompt.use_cline" in config/config.jsonc
+} 
